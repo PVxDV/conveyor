@@ -1,4 +1,4 @@
-package pvxdv.conveyor.controllers;
+package pvxdv.conveyor.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/conveyor")
-public class CalculationController {
+public class OffersController {
     @PostMapping("/offers")
     public ResponseEntity<List<LoanOfferDTO>> getOffers(LoanApplicationRequestDTO loanApplicationRequestDTO){
         return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<LoanOfferDTO>());

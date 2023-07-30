@@ -1,4 +1,4 @@
-package pvxdv.conveyor.controllers;
+package pvxdv.conveyor.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import pvxdv.conveyor.model.CreditDTO;
 import pvxdv.conveyor.model.ScoringDataDTO;
 
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/conveyor")
-public class OffersController {
+public class CalculationController {
     @PostMapping("/calculation")
     public ResponseEntity<CreditDTO> getScoring(ScoringDataDTO scoringDataDTO){
         return ResponseEntity.status(HttpStatus.OK).body(new CreditDTO());
