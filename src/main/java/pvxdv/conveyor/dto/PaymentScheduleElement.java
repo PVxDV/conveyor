@@ -1,4 +1,4 @@
-package pvxdv.conveyor.model;
+package pvxdv.conveyor.dto;
 
 import lombok.Data;
 
