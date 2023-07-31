@@ -1,4 +1,4 @@
-package pvxdv.conveyor.controller;
+package pvxdv.conveyor.controllers;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,6 +18,6 @@ import pvxdv.conveyor.dto.ScoringDataDTO;
 public class CalculationController {
     @PostMapping("/calculation")
     public ResponseEntity<CreditDTO> getScoring(@Valid @RequestBody ScoringDataDTO scoringDataDTO){
-        return ResponseEntity.status(HttpStatus.OK).body(new CreditDTO());
+        return null;
     }
 }

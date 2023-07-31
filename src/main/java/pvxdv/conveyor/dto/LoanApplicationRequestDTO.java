@@ -12,13 +12,13 @@ import java.time.LocalDate;
 @Value
 public class LoanApplicationRequestDTO {
 
-    @NonNull()
+    @NonNull
     BigDecimal amount;
     @NonNull
     Integer term;
-    @NotBlank(message = "не должно быть пустым")
+    @NotBlank(message = "the field \"firstName\" should not be empty")
     String firstName;
-    @NotBlank(message = "не должно быть пустым")
+    @NotBlank(message = "the field \"lastName\" should not be empty")
     String lastName;
     @NotBlank(message = "не должно быть пустым")
     String middleName;
@@ -26,7 +26,7 @@ public class LoanApplicationRequestDTO {
     String email;
     @NonNull
     LocalDate birthdate;
-    @NotBlank(message = "не должно быть пустым")
+    @NotBlank(message = "the field \"firstName\" should not be empty")
     String passportSeries;
     @NotBlank(message = "не должно быть пустым")
     String passportNumber;

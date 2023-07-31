@@ -1,19 +1,14 @@
-package pvxdv.conveyor.dto;
+package pvxdv.conveyor.localDto;
 
 import lombok.Value;
 
 import java.math.BigDecimal;
 
 @Value
-public class LoanOfferDTO {
-    Long applicationId;
+public class PreSoringResponseDTO {
     BigDecimal requestedAmount;
     BigDecimal totalAmount;
     Integer term;
     BigDecimal monthlyPayment;
     BigDecimal rate;
-    Boolean isInsuranceEnabled;
-    Boolean isSalaryClient;
 }
-
-

@@ -6,7 +6,7 @@ import lombok.Value;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
+@Value
 public class CreditDTO {
     BigDecimal amount;
     Integer term;

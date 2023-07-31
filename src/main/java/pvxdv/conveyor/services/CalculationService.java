@@ -1,4 +1,4 @@
-package pvxdv.conveyor.service;
+package pvxdv.conveyor.services;
 
 import org.springframework.stereotype.Service;
 
