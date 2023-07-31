@@ -11,6 +11,7 @@ import pvxdv.conveyor.localDto.PreSoringResponseDTO;
 @Slf4j
 public class Mapper {
     public PreScoringRequestDTO loanApplicationRequestDTOToPreScoringRequestDTO(LoanApplicationRequestDTO loanApplicationRequestDTO) {
+        log.info("{} making localDTO with loanApplicationRequestDTOToPreScoringRequestDTO() method", this.getClass().getSimpleName());
         return new PreScoringRequestDTO(loanApplicationRequestDTO.getAmount(), loanApplicationRequestDTO.getTerm());
     }
 

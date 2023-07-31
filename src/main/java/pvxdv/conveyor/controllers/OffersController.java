@@ -21,13 +21,12 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/conveyor")
 public class OffersController {
-    private final MonthlyPaymentCalculatorService creditCalculatorService;
     private final AbleOffersService ableOffersService;
 
     @PostMapping("/offers/{applicationId}")
     public ResponseEntity<List<LoanOfferDTO>> getOffers(@Valid @RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO,
                                                         @PathVariable Long applicationId) {
-        log.info("getOffers() for applicationId:{}", applicationId);
+        log.info("{} starting processing the request getOffers() for applicationId:{}", this.getClass().getSimpleName(), applicationId);
         return ResponseEntity.status(HttpStatus.OK).body(ableOffersService.generateAvailableOffers(loanApplicationRequestDTO, applicationId));
     }
 }
