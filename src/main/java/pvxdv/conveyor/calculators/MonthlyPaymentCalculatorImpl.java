@@ -1,33 +1,51 @@
-package pvxdv.conveyor.services;
+package pvxdv.conveyor.calculators;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+
 
 import pvxdv.conveyor.localDto.PreScoringRequestDTO;
 import pvxdv.conveyor.localDto.PreSoringResponseDTO;
+import pvxdv.conveyor.localDto.ScoringRequestDTO;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@Service
+@Component
 @Slf4j
-public class MonthlyPaymentCalculatorServiceImpl implements MonthlyPaymentCalculatorService {
-
-    private BigDecimal insuranceCost = BigDecimal.valueOf(5000);
-    private Integer baseRate = 15;
+public class MonthlyPaymentCalculatorImpl implements MonthlyPaymentCalculator {
+    private final BigDecimal insuranceCost = BigDecimal.valueOf(5000);
+    private final BigDecimal baseRate = BigDecimal.valueOf(15);
 
     @Override
-    public BigDecimal calculateMonthlyPaymentForScoring(BigDecimal amount, Integer term, Integer rate, Boolean isInsuranceEnabled,
-                                                        Boolean isSalaryClient) {
+    public BigDecimal calculateMonthlyPaymentForScoring(ScoringRequestDTO scoringRequestDTO, BigDecimal rate) {
         log.info("calculateMonthlyPaymentForScoring()");
-        return null;
+
+        Integer term = scoringRequestDTO.getTerm();
+        BigDecimal amount = scoringRequestDTO.getAmount();
+        BigDecimal creditRate = rate;
+
+        if (scoringRequestDTO.getIsInsuranceEnabled()) {
+            if (scoringRequestDTO.getIsSalaryClient()) {
+                creditRate = creditRate.subtract(BigDecimal.valueOf(4));
+            } else {
+                creditRate = creditRate.subtract(BigDecimal.valueOf(3));
+            }
+            return calculateMonthlyPayment(insuranceCost, calculateAnnuityRatio(term, creditRate), amount);
+
+        } else {
+            if (!scoringRequestDTO.getIsSalaryClient()) {
+                creditRate = creditRate.add(BigDecimal.valueOf(3));
+            }
+            return calculateMonthlyPayment(calculateAnnuityRatio(term, creditRate), amount);
+        }
     }
 
     @Override
     public PreSoringResponseDTO calculateMonthlyPaymentForPreScoring(PreScoringRequestDTO preScoringRequestDTO, Boolean isInsuranceEnabled,
                                                                      Boolean isSalaryClient) {
         log.info("calculateMonthlyPaymentForPreScoring()");
-        Integer creditRate = baseRate;
+        BigDecimal creditRate = baseRate;
         Integer term = preScoringRequestDTO.getTerm();
         BigDecimal amount = preScoringRequestDTO.getAmount();
 
@@ -36,15 +54,15 @@ public class MonthlyPaymentCalculatorServiceImpl implements MonthlyPaymentCalcul
 
         if (isInsuranceEnabled) {
             if (isSalaryClient) {
-                creditRate -= 4;
+                creditRate = creditRate.subtract(BigDecimal.valueOf(4));
             } else {
-                creditRate -= 3;
+                creditRate = creditRate.subtract(BigDecimal.valueOf(3));
             }
             monthlyPayment = calculateMonthlyPayment(insuranceCost, calculateAnnuityRatio(term, creditRate), amount);
 
         } else {
             if (!isSalaryClient) {
-                creditRate += 3;
+                creditRate = creditRate.add(BigDecimal.valueOf(3));
             }
             monthlyPayment = calculateMonthlyPayment(calculateAnnuityRatio(term, creditRate), amount);
         }
@@ -52,12 +70,12 @@ public class MonthlyPaymentCalculatorServiceImpl implements MonthlyPaymentCalcul
         totalAmount = calculateTotalAmount(monthlyPayment, term);
 
         log.info("The calculation is finished");
-        return new PreSoringResponseDTO(amount, totalAmount , term, monthlyPayment, BigDecimal.valueOf(creditRate));
+        return new PreSoringResponseDTO(amount, totalAmount, term, monthlyPayment, creditRate);
     }
 
-    private BigDecimal calculateAnnuityRatio(Integer term, Integer rate) {
+    private BigDecimal calculateAnnuityRatio(Integer term, BigDecimal rate) {
         log.info("calculateAnnuityRatio()");
-        BigDecimal monthlyInterestRate = BigDecimal.valueOf(rate).
+        BigDecimal monthlyInterestRate = rate.
                 divide(BigDecimal.valueOf(1200), 10, RoundingMode.CEILING);
 
         BigDecimal monthlyInterestRatePlusOneAndPow = BigDecimal.valueOf(1).
@@ -92,10 +110,9 @@ public class MonthlyPaymentCalculatorServiceImpl implements MonthlyPaymentCalcul
     private BigDecimal calculateInsurance(BigDecimal insuranceCost, BigDecimal amount) {
         log.info("calculateInsurance()");
         BigDecimal insurance = insuranceCost;
-        if(amount.doubleValue() > 50000) {
+        if (amount.doubleValue() > 50000) {
             insurance = amount.multiply(BigDecimal.valueOf(0.1));
         }
         return insurance;
     }
-
 }

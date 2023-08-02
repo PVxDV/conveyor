@@ -3,6 +3,7 @@ package pvxdv.conveyor.services;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import pvxdv.conveyor.calculators.MonthlyPaymentCalculator;
 import pvxdv.conveyor.dto.LoanApplicationRequestDTO;
 import pvxdv.conveyor.dto.LoanOfferDTO;
 import pvxdv.conveyor.localDto.PreScoringRequestDTO;
@@ -14,8 +15,8 @@ import java.util.*;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class AbleOffersService {
-    MonthlyPaymentCalculatorService creditCalculatorService;
+public class PreScoringService {
+    MonthlyPaymentCalculator monthlyPaymentCalculator;
     Mapper mapper;
 
     public List<LoanOfferDTO> generateAvailableOffers(LoanApplicationRequestDTO loanApplicationRequestDTO, Long applicationId) {
@@ -29,10 +30,9 @@ public class AbleOffersService {
         result.add(generateOffer(preScoringRequestDTO, false, true, applicationId));
         result.add(generateOffer(preScoringRequestDTO, false, false, applicationId));
 
-        result.sort(Comparator.comparing(LoanOfferDTO::getMonthlyPayment));
+        result.sort(Comparator.comparing(LoanOfferDTO::getRate).reversed());
 
         log.info("Available offers for applicationId:{} are generated", applicationId);
-
         return result;
     }
 
@@ -40,7 +40,7 @@ public class AbleOffersService {
                                        Boolean isInsuranceEnabled,
                                        Boolean isSalaryClient, Long applicationId) {
         log.info("Starting generation and calculation with generateOffer() for applicationId:{}", applicationId);
-        PreSoringResponseDTO preSoringResponseDTO = creditCalculatorService.
+        PreSoringResponseDTO preSoringResponseDTO = monthlyPaymentCalculator.
                 calculateMonthlyPaymentForPreScoring(preScoringRequestDTO, isInsuranceEnabled, isSalaryClient);
 
         return new LoanOfferDTO(applicationId, preSoringResponseDTO.getRequestedAmount(),
