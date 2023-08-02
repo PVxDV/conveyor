@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import pvxdv.conveyor.dto.LoanApplicationRequestDTO;
 import pvxdv.conveyor.dto.ScoringDataDTO;
-import pvxdv.conveyor.dto.local.PreScoringRequestDTO;
-import pvxdv.conveyor.dto.local.ScoringClientDTO;
-import pvxdv.conveyor.dto.local.ScoringRequestDTO;
+import pvxdv.conveyor.dto.PreScoringRequestDTO;
+import pvxdv.conveyor.dto.ScoringClientDTO;
+import pvxdv.conveyor.dto.ScoringRequestDTO;
 
 @Component
 @Slf4j

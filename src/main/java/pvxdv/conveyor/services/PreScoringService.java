@@ -7,7 +7,7 @@ import pvxdv.conveyor.calculators.MonthlyPaymentCalculator;
 import pvxdv.conveyor.calculators.RateCalculator;
 import pvxdv.conveyor.dto.LoanApplicationRequestDTO;
 import pvxdv.conveyor.dto.LoanOfferDTO;
-import pvxdv.conveyor.dto.local.PreScoringRequestDTO;
+import pvxdv.conveyor.dto.PreScoringRequestDTO;
 import pvxdv.conveyor.mapper.Mapper;
 
 import java.math.BigDecimal;

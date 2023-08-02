@@ -1,6 +1,6 @@
 package pvxdv.conveyor.calculators;
 
-import pvxdv.conveyor.dto.local.ScoringClientDTO;
+import pvxdv.conveyor.dto.ScoringClientDTO;
 
 import java.math.BigDecimal;
 

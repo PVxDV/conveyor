@@ -1,8 +1,8 @@
 package pvxdv.conveyor.calculators;
 
 
-import pvxdv.conveyor.dto.local.PreScoringRequestDTO;
-import pvxdv.conveyor.dto.local.ScoringRequestDTO;
+import pvxdv.conveyor.dto.PreScoringRequestDTO;
+import pvxdv.conveyor.dto.ScoringRequestDTO;
 
 import java.math.BigDecimal;
 

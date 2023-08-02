@@ -1,4 +1,4 @@
-package pvxdv.conveyor.dto.local;
+package pvxdv.conveyor.dto;
 
 import lombok.Value;
 

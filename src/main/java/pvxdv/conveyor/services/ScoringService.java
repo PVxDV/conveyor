@@ -9,8 +9,8 @@ import pvxdv.conveyor.calculators.RateCalculator;
 import pvxdv.conveyor.dto.CreditDTO;
 import pvxdv.conveyor.dto.PaymentScheduleElement;
 import pvxdv.conveyor.dto.ScoringDataDTO;
-import pvxdv.conveyor.dto.local.ScoringClientDTO;
-import pvxdv.conveyor.dto.local.ScoringRequestDTO;
+import pvxdv.conveyor.dto.ScoringClientDTO;
+import pvxdv.conveyor.dto.ScoringRequestDTO;
 import pvxdv.conveyor.mapper.Mapper;
 
 import java.math.BigDecimal;

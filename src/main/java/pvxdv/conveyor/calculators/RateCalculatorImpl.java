@@ -2,7 +2,7 @@ package pvxdv.conveyor.calculators;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import pvxdv.conveyor.dto.local.ScoringClientDTO;
+import pvxdv.conveyor.dto.ScoringClientDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
