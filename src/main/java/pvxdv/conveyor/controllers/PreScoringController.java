@@ -13,6 +13,7 @@ import pvxdv.conveyor.services.PreScoringService;
 
 import java.util.List;
 
+//@Tag(name = "Прескоринг для 4х кредитных предложений")
 @RestController
 @AllArgsConstructor
 @Slf4j

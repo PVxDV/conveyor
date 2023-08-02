@@ -1,6 +1,7 @@
 package pvxdv.conveyor.calculators;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import pvxdv.conveyor.dto.ScoringClientDTO;
 
@@ -11,7 +12,8 @@ import java.time.LocalDate;
 @Slf4j
 public class RateCalculatorImpl implements RateCalculator {
 
-    private final BigDecimal baseRate = BigDecimal.valueOf(15);
+    @Value("${baseRate}")
+    private BigDecimal baseRate;
 
     @Override
     public BigDecimal calculateRateForScoring(ScoringClientDTO clientDTO) {

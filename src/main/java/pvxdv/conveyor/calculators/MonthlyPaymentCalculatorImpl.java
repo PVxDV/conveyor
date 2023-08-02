@@ -1,6 +1,7 @@
 package pvxdv.conveyor.calculators;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
@@ -10,11 +11,13 @@ import pvxdv.conveyor.dto.ScoringRequestDTO;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+
 @Component
 @Slf4j
 public class MonthlyPaymentCalculatorImpl implements MonthlyPaymentCalculator {
 
-    private final BigDecimal insuranceCost = BigDecimal.valueOf(5000);
+    @Value("${insuranceCost}")
+    private BigDecimal insuranceCost;
     @Override
     public BigDecimal calculateMonthlyPaymentForScoring(ScoringRequestDTO scoringRequestDTO, BigDecimal rate) {
         log.info("calculateMonthlyPaymentForScoring()");
