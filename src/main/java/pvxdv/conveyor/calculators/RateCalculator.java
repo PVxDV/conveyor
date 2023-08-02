@@ -1,11 +1,10 @@
 package pvxdv.conveyor.calculators;
 
-import pvxdv.conveyor.localDto.ClientDTO;
-import pvxdv.conveyor.localDto.PreScoringRequestDTO;
+import pvxdv.conveyor.dto.local.ScoringClientDTO;
 
 import java.math.BigDecimal;
 
 public interface RateCalculator {
-    BigDecimal calculateRateForScoring(ClientDTO clientDTO, BigDecimal rate);
-    BigDecimal calculateRateForPreScoring(PreScoringRequestDTO preScoringRequestDTO, BigDecimal rate);
+    BigDecimal calculateRateForScoring(ScoringClientDTO clientDTO);
+    BigDecimal calculateRateForPreScoring(Boolean isInsuranceEnabled, Boolean isSalaryClient);
 }

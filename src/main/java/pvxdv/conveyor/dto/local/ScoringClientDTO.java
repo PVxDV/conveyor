@@ -1,30 +1,27 @@
-package pvxdv.conveyor.dto;
+package pvxdv.conveyor.dto.local;
 
 import lombok.Value;
+import pvxdv.conveyor.dto.enums.EmploymentStatus;
 import pvxdv.conveyor.dto.enums.Gender;
 import pvxdv.conveyor.dto.enums.MaritalStatus;
+import pvxdv.conveyor.dto.enums.Position;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Value
-public class ScoringDataDTO {
+public class ScoringClientDTO {
     BigDecimal amount;
-    Integer term;
-    String firstName;
-    String lastName;
-    String middleName;
     Gender gender;
     LocalDate birthdate;
-    String passportSeries;
-    String passportNumber;
-    LocalDate passportIssueDate;
-    String passportIssueBranch;
     MaritalStatus maritalStatus;
     Integer dependentAmount;
-    EmploymentDTO employment;
-    String account;
+    EmploymentStatus employmentStatus;
+    BigDecimal salary;
+    Position position;
+    Integer workExperienceTotal;
+    Integer workExperienceCurrent;
+
     Boolean isInsuranceEnabled;
     Boolean isSalaryClient;
 }
-

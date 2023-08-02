@@ -2,8 +2,7 @@ package pvxdv.conveyor.calculators;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import pvxdv.conveyor.localDto.ClientDTO;
-import pvxdv.conveyor.localDto.PreScoringRequestDTO;
+import pvxdv.conveyor.dto.local.ScoringClientDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,12 +12,13 @@ import java.time.LocalDate;
 public class RateCalculatorImpl implements RateCalculator {
 
     private final BigDecimal baseRate = BigDecimal.valueOf(15);
-       @Override
-    public BigDecimal calculateRateForScoring(ClientDTO clientDTO, BigDecimal rate) {
+
+    @Override
+    public BigDecimal calculateRateForScoring(ScoringClientDTO clientDTO) {
         log.info("Client verification begins");
-        BigDecimal currentRate = rate;
+        BigDecimal currentRate = insuranceAndClientChecker(baseRate, clientDTO.getIsInsuranceEnabled(), clientDTO.getIsSalaryClient());
         BigDecimal rejection = BigDecimal.valueOf(-1);
-        Integer age = LocalDate.now().getYear() - clientDTO.getBirthdate().getYear();
+        int age = LocalDate.now().getYear() - clientDTO.getBirthdate().getYear();
 
         log.info("age verification");
         if (age < 20 || age > 60) {
@@ -42,52 +42,48 @@ public class RateCalculatorImpl implements RateCalculator {
 
         log.info("EmploymentStatus verification");
         switch (clientDTO.getEmploymentStatus()) {
-            case "UNEMPLOYED" -> {
+            case UNEMPLOYED -> {
                 return rejection;
             }
-            case "SELF_EMPLOYED" -> currentRate = currentRate.add(BigDecimal.valueOf(1));
-            case "BUSINESS_OWNER" -> currentRate = currentRate.add(BigDecimal.valueOf(3));
+            case SELF_EMPLOYED -> currentRate = currentRate.add(BigDecimal.valueOf(1));
+            case BUSINESS_OWNER -> currentRate = currentRate.add(BigDecimal.valueOf(3));
         }
 
         log.info("EmploymentPosition verification");
         switch (clientDTO.getPosition()) {
-            case "MIDDLE_MANAGER" -> currentRate = currentRate.subtract(BigDecimal.valueOf(2));
-            case "TOP_MANAGER" -> currentRate = currentRate.subtract(BigDecimal.valueOf(4));
+            case MIDDLE_MANAGER -> currentRate = currentRate.subtract(BigDecimal.valueOf(2));
+            case TOP_MANAGER -> currentRate = currentRate.subtract(BigDecimal.valueOf(4));
         }
 
         log.info("MaritalStatus verification");
         switch (clientDTO.getMaritalStatus()) {
-            case "MARRIED" -> currentRate = currentRate.subtract(BigDecimal.valueOf(3));
-            case "DIVORCED" -> currentRate = currentRate.add(BigDecimal.valueOf(1));
-            case "SINGLE" -> currentRate = currentRate.add(BigDecimal.valueOf(2));
+            case MARRIED -> currentRate = currentRate.subtract(BigDecimal.valueOf(3));
+            case DIVORCED -> currentRate = currentRate.add(BigDecimal.valueOf(1));
+            case SINGLE -> currentRate = currentRate.add(BigDecimal.valueOf(2));
         }
 
         log.info("Gender verification");
         switch (clientDTO.getGender()) {
-            case "FEMALE" -> {
-                if (age >= 35 && age <= 60) {
+            case FEMALE -> {
+                if (age >= 35) {
                     currentRate = currentRate.subtract(BigDecimal.valueOf(3));
                 }
             }
-            case "MALE" -> {
+            case MALE -> {
                 if (age >= 30 && age <= 55) {
                     currentRate = currentRate.subtract(BigDecimal.valueOf(3));
                 }
             }
             default -> currentRate = currentRate.add(BigDecimal.valueOf(3));
         }
-
-
         log.info("client verification is completed");
         return currentRate;
     }
 
     @Override
-    public BigDecimal calculateRateForPreScoring(PreScoringRequestDTO preScoringRequestDTO, BigDecimal rate) {
-        return insuranceAndClientChecker(rate, preScoringRequestDTO.);
+    public BigDecimal calculateRateForPreScoring(Boolean isInsuranceEnabled, Boolean isSalaryClient) {
+        return insuranceAndClientChecker(baseRate, isInsuranceEnabled, isSalaryClient);
     }
-
-
 
     private BigDecimal insuranceAndClientChecker(BigDecimal rate, Boolean isInsuranceEnabled, Boolean isSalaryClient) {
         BigDecimal creditRate = rate;
@@ -102,6 +98,7 @@ public class RateCalculatorImpl implements RateCalculator {
             if (!isSalaryClient) {
                 creditRate = creditRate.add(BigDecimal.valueOf(3));
             }
-            return creditRate;
+        }
+        return creditRate;
     }
 }

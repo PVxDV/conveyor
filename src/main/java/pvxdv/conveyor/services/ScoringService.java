@@ -9,8 +9,8 @@ import pvxdv.conveyor.calculators.RateCalculator;
 import pvxdv.conveyor.dto.CreditDTO;
 import pvxdv.conveyor.dto.PaymentScheduleElement;
 import pvxdv.conveyor.dto.ScoringDataDTO;
-import pvxdv.conveyor.localDto.ClientDTO;
-import pvxdv.conveyor.localDto.ScoringRequestDTO;
+import pvxdv.conveyor.dto.local.ScoringClientDTO;
+import pvxdv.conveyor.dto.local.ScoringRequestDTO;
 import pvxdv.conveyor.mapper.Mapper;
 
 import java.math.BigDecimal;
@@ -28,24 +28,22 @@ public class ScoringService {
     private final RateCalculator rateCalculator;
     private final Mapper mapper;
 
-    private final BigDecimal baseRate = BigDecimal.valueOf(15);
     public CreditDTO calculateScoring(ScoringDataDTO scoringDataDTO, Long clientId) {
         log.info("Starting calculateScoring() for clientId:{}", clientId);
 
         ScoringRequestDTO scoringRequestDTO = mapper.scoringDataDTOToScoringRequestDTO(scoringDataDTO);
-        ClientDTO clientDTO = mapper.scoringDataDTOToClientDTO(scoringDataDTO);
+        ScoringClientDTO clientDTO = mapper.scoringDataDTOToScoringClientDTO(scoringDataDTO);
 
-        BigDecimal finalLoanRate = rateCalculator.calculateRateForScoring(clientDTO, baseRate);
+        BigDecimal finalLoanRate = rateCalculator.calculateRateForScoring(clientDTO);
         BigDecimal monthlyPayment = monthlyPaymentCalculator.calculateMonthlyPaymentForScoring(scoringRequestDTO, finalLoanRate);
         BigDecimal psk = pskCalculator.calculatePsk(monthlyPayment, scoringRequestDTO.getAmount(), scoringDataDTO.getTerm());
 
         List<PaymentScheduleElement> paymentScheduleElementList = generatePaymentScheduleList(scoringRequestDTO.getTerm(),
                 monthlyPayment, scoringRequestDTO.getAmount(), finalLoanRate);
 
-        return new CreditDTO(scoringRequestDTO.getAmount(),scoringRequestDTO.getTerm(), monthlyPayment, finalLoanRate,
+        return new CreditDTO(scoringRequestDTO.getAmount(), scoringRequestDTO.getTerm(), monthlyPayment, finalLoanRate,
                 psk, scoringRequestDTO.getIsInsuranceEnabled(), scoringRequestDTO.getIsSalaryClient(), paymentScheduleElementList);
     }
-
 
     private List<PaymentScheduleElement> generatePaymentScheduleList(Integer temp, BigDecimal monthlyPayment,
                                                                      BigDecimal amount, BigDecimal rate) {
