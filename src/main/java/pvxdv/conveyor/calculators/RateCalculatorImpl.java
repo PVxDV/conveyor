@@ -7,20 +7,20 @@ import pvxdv.conveyor.dto.ScoringClientDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
 
 @Component
 @Slf4j
 public class RateCalculatorImpl implements RateCalculator {
-
     @Value("${baseRate}")
     private BigDecimal baseRate;
+    private final BigDecimal rejection = BigDecimal.valueOf(-1);
 
     @Override
-    public BigDecimal calculateRateForScoring(ScoringClientDTO clientDTO) {
+    public BigDecimal calculateRateForScoring(ScoringClientDTO scoringClientDTO) {
         log.info("Client verification begins");
-        BigDecimal currentRate = insuranceAndClientChecker(baseRate, clientDTO.getIsInsuranceEnabled(), clientDTO.getIsSalaryClient());
-        BigDecimal rejection = BigDecimal.valueOf(-1);
-        int age = LocalDate.now().getYear() - clientDTO.getBirthdate().getYear();
+        BigDecimal currentRate = insuranceAndClientChecker(baseRate, scoringClientDTO.getIsInsuranceEnabled(), scoringClientDTO.getIsSalaryClient());
+        int age = ageCalculator(scoringClientDTO.getBirthdate());
 
         log.info("age verification");
         if (age < 20 || age > 60) {
@@ -28,22 +28,22 @@ public class RateCalculatorImpl implements RateCalculator {
         }
 
         log.info("salary verification");
-        if (clientDTO.getAmount().compareTo(clientDTO.getSalary().multiply(BigDecimal.valueOf(20))) > 0) {
+        if (scoringClientDTO.getAmount().compareTo(scoringClientDTO.getSalary().multiply(BigDecimal.valueOf(20))) > 0) {
             return rejection;
         }
 
         log.info("workExperience verification");
-        if (clientDTO.getWorkExperienceTotal() < 12 || clientDTO.getWorkExperienceCurrent() < 3) {
+        if (scoringClientDTO.getWorkExperienceTotal() < 12 || scoringClientDTO.getWorkExperienceCurrent() < 3) {
             return rejection;
         }
 
         log.info("dependentAmount verification");
-        if (clientDTO.getDependentAmount() > 1) {
+        if (scoringClientDTO.getDependentAmount() > 1) {
             currentRate = currentRate.add(BigDecimal.valueOf(1));
         }
 
         log.info("EmploymentStatus verification");
-        switch (clientDTO.getEmploymentStatus()) {
+        switch (scoringClientDTO.getEmploymentStatus()) {
             case UNEMPLOYED -> {
                 return rejection;
             }
@@ -52,20 +52,20 @@ public class RateCalculatorImpl implements RateCalculator {
         }
 
         log.info("EmploymentPosition verification");
-        switch (clientDTO.getPosition()) {
+        switch (scoringClientDTO.getPosition()) {
             case MIDDLE_MANAGER -> currentRate = currentRate.subtract(BigDecimal.valueOf(2));
             case TOP_MANAGER -> currentRate = currentRate.subtract(BigDecimal.valueOf(4));
         }
 
         log.info("MaritalStatus verification");
-        switch (clientDTO.getMaritalStatus()) {
+        switch (scoringClientDTO.getMaritalStatus()) {
             case MARRIED -> currentRate = currentRate.subtract(BigDecimal.valueOf(3));
             case DIVORCED -> currentRate = currentRate.add(BigDecimal.valueOf(1));
             case SINGLE -> currentRate = currentRate.add(BigDecimal.valueOf(2));
         }
 
         log.info("Gender verification");
-        switch (clientDTO.getGender()) {
+        switch (scoringClientDTO.getGender()) {
             case FEMALE -> {
                 if (age >= 35) {
                     currentRate = currentRate.subtract(BigDecimal.valueOf(3));
@@ -83,7 +83,7 @@ public class RateCalculatorImpl implements RateCalculator {
     }
 
     @Override
-    public BigDecimal calculateRateForPreScoring(Boolean isInsuranceEnabled, Boolean isSalaryClient) {
+    public BigDecimal calculateRateForPreScoring( Boolean isInsuranceEnabled, Boolean isSalaryClient) {
         return insuranceAndClientChecker(baseRate, isInsuranceEnabled, isSalaryClient);
     }
 
@@ -102,5 +102,10 @@ public class RateCalculatorImpl implements RateCalculator {
             }
         }
         return creditRate;
+    }
+
+    private int ageCalculator(LocalDate birthDate) {
+        LocalDate currentDate = LocalDate.now();
+        return Period.between(birthDate, currentDate).getYears();
     }
 }

@@ -1,9 +1,9 @@
 package pvxdv.conveyor.dto;
 
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.NonNull;
+import jakarta.validation.constraints.*;
 import lombok.Value;
+import org.hibernate.validator.constraints.Length;
 
 
 import java.math.BigDecimal;
@@ -11,24 +11,23 @@ import java.time.LocalDate;
 
 @Value
 public class LoanApplicationRequestDTO {
-
-    @NonNull
+    @NotNull @Min(10000)
     BigDecimal amount;
-    @NonNull
+    @NotNull @Min(6)
     Integer term;
-    @NotBlank(message = "the field \"firstName\" should not be empty")
+    @NotNull @Length(min = 2, max = 30, message = "\"firstName\" should be from 2 to 30 latin letters")
     String firstName;
-    @NotBlank(message = "the field \"lastName\" should not be empty")
+    @NotNull @Length(min = 2, max = 30, message = "\"lastName\" should be from 2 to 30 latin letters")
     String lastName;
-    @NotBlank(message = "не должно быть пустым")
+    @Length(min = 2, max = 30, message = "\"middleName\" should be from 2 to 30 latin letters or null")
     String middleName;
-    // @Pattern(regexp = "[\\w\\.]{2,50}@[\\w\\.]{2,20}")
+    @NotNull @Pattern(regexp = "[\\w]{2,50}@[\\w]{2,20}", message = "wrong \"email\"")
     String email;
-    @NonNull
+    @NotNull  @Past // 1993-08-02T20:17:17.563
     LocalDate birthdate;
-    @NotBlank(message = "the field \"firstName\" should not be empty")
+    @NotNull @Length(min = 4, max = 4, message = "\"passportSeries\" should be 4 digits")
     String passportSeries;
-    @NotBlank(message = "не должно быть пустым")
+    @NotNull @Length(min = 6, max = 6, message = "\"passportSeries\" should be 6 digits")
     String passportNumber;
 }
 

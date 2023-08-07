@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
-import pvxdv.conveyor.dto.PreScoringRequestDTO;
-import pvxdv.conveyor.dto.ScoringRequestDTO;
+import pvxdv.conveyor.dto.PreScoringDTO;
+import pvxdv.conveyor.dto.ScoringDTO;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -19,13 +19,13 @@ public class MonthlyPaymentCalculatorImpl implements MonthlyPaymentCalculator {
     @Value("${insuranceCost}")
     private BigDecimal insuranceCost;
     @Override
-    public BigDecimal calculateMonthlyPaymentForScoring(ScoringRequestDTO scoringRequestDTO, BigDecimal rate) {
+    public BigDecimal calculateMonthlyPaymentForScoring(ScoringDTO scoringDTO, BigDecimal rate) {
         log.info("calculateMonthlyPaymentForScoring()");
 
-        Integer term = scoringRequestDTO.getTerm();
-        BigDecimal amount = scoringRequestDTO.getAmount();
+        Integer term = scoringDTO.getTerm();
+        BigDecimal amount = scoringDTO.getAmount();
 
-        if (scoringRequestDTO.getIsInsuranceEnabled()) {
+        if (scoringDTO.getIsInsuranceEnabled()) {
             return calculateMonthlyPayment(calculateInsurance(insuranceCost), calculateAnnuityRatio(term, rate), amount);
         } else {
             return calculateMonthlyPayment(calculateAnnuityRatio(term, rate), amount);
@@ -33,12 +33,11 @@ public class MonthlyPaymentCalculatorImpl implements MonthlyPaymentCalculator {
     }
 
     @Override
-    public BigDecimal calculateMonthlyPaymentForPreScoring(PreScoringRequestDTO preScoringRequestDTO, Boolean isInsuranceEnabled,
+    public BigDecimal calculateMonthlyPaymentForPreScoring(PreScoringDTO preScoringDTO, Boolean isInsuranceEnabled,
                                                            Boolean isSalaryClient, BigDecimal rate) {
         log.info("calculateMonthlyPaymentForPreScoring()");
-
-        Integer term = preScoringRequestDTO.getTerm();
-        BigDecimal amount = preScoringRequestDTO.getAmount();
+        Integer term = preScoringDTO.getTerm();
+        BigDecimal amount = preScoringDTO.getAmount();
 
         if (isInsuranceEnabled) {
             return calculateMonthlyPayment(calculateInsurance(insuranceCost), calculateAnnuityRatio(term, rate), amount);

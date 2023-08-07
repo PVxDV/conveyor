@@ -5,7 +5,7 @@ import lombok.Value;
 import java.math.BigDecimal;
 
 @Value
-public class ScoringRequestDTO {
+public class ScoringDTO {
     BigDecimal amount;
     Integer term;
     Boolean isInsuranceEnabled;

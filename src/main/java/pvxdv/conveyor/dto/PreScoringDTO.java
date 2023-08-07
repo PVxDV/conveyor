@@ -5,7 +5,7 @@ import lombok.Value;
 import java.math.BigDecimal;
 
 @Value
-public class PreScoringRequestDTO {
+public class PreScoringDTO {
     BigDecimal amount;
     Integer term;
 }
