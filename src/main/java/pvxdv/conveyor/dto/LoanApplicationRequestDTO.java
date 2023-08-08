@@ -23,7 +23,7 @@ public class LoanApplicationRequestDTO {
     String middleName;
     @NotNull @Pattern(regexp = "[\\w]{2,50}@[\\w]{2,20}", message = "wrong \"email\"")
     String email;
-    @NotNull  @Past // 1993-08-02T20:17:17.563
+    @NotNull  @Past
     LocalDate birthdate;
     @NotNull @Length(min = 4, max = 4, message = "\"passportSeries\" should be 4 digits")
     String passportSeries;

@@ -9,11 +9,9 @@ class ScoringControllerTest {
 
     @BeforeEach
     void setUp() {
-        //todo
     }
 
     @Test
     void getScoring() {
-        //todo
     }
 }

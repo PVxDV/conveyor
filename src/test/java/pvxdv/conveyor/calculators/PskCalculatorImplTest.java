@@ -9,11 +9,9 @@ class PskCalculatorImplTest {
 
     @BeforeEach
     void setUp() {
-        //todo
     }
 
     @Test
     void calculatePsk() {
-        //todo
     }
 }

@@ -9,21 +9,17 @@ class MonthlyPaymentCalculatorImplTest {
 
     @BeforeEach
     void setUp() {
-        //todo
     }
 
     @Test
     void calculateMonthlyPaymentForScoring() {
-        //todo
     }
 
     @Test
     void calculateMonthlyPaymentForPreScoring() {
-        //todo
     }
 
     @Test
     void calculateInsurance() {
-        //todo
     }
 }

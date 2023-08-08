@@ -9,11 +9,9 @@ class ScoringServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        //todo
     }
 
     @Test
     void calculateScoring() {
-        //todo
     }
 }

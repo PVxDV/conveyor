@@ -1,6 +1,5 @@
 package pvxdv.conveyor.services;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,11 +19,10 @@ import java.util.*;
 @Slf4j
 @AllArgsConstructor
 public class PreScoringServiceImpl implements PreScoringService {
-    MonthlyPaymentCalculator monthlyPaymentCalculator;
-    RateCalculator rateCalculator;
-    Mapper mapper;
+    private final MonthlyPaymentCalculator monthlyPaymentCalculator;
+    private final RateCalculator rateCalculator;
+    private final  Mapper mapper;
 
-    @Tag(name = "test")
     public List<LoanOfferDTO> generateAvailableOffers(LoanApplicationRequestDTO loanApplicationRequestDTO, Long applicationId) {
         LocalDate currentDate = LocalDate.now();
         if(Period.between(loanApplicationRequestDTO.getBirthdate(), currentDate).getYears() < 18){

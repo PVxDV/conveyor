@@ -9,16 +9,13 @@ class RateCalculatorImplTest {
 
     @BeforeEach
     void setUp() {
-        //todo
     }
 
     @Test
     void calculateRateForScoring() {
-        //todo
     }
 
     @Test
     void calculateRateForPreScoring() {
-        //todo
     }
 }
