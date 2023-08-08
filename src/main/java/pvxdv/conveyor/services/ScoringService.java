@@ -4,5 +4,5 @@ import pvxdv.conveyor.dto.CreditDTO;
 import pvxdv.conveyor.dto.ScoringDataDTO;
 
 public interface ScoringService {
-    CreditDTO calculateScoring(ScoringDataDTO scoringDataDTO, Long clientId);
+    CreditDTO calculateScoring(ScoringDataDTO scoringDataDTO);
 }

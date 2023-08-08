@@ -20,9 +20,9 @@ import pvxdv.conveyor.services.ScoringServiceImpl;
 @RequestMapping("/conveyor")
 public class ScoringController {
     private final ScoringServiceImpl scoringServiceImpl;
-    @PostMapping("/calculation/{clientId}")
-    public ResponseEntity<CreditDTO> getScoring(@Valid @RequestBody ScoringDataDTO scoringDataDTO, @PathVariable Long clientId) {
-        log.info("{} starting scoring for applicationId:{}", this.getClass().getSimpleName(), clientId);
-        return ResponseEntity.status(HttpStatus.OK).body(scoringServiceImpl.calculateScoring(scoringDataDTO, clientId));
+    @PostMapping("/calculation/")
+    public ResponseEntity<CreditDTO> getScoring(@Valid @RequestBody ScoringDataDTO scoringDataDTO) {
+        log.info("{} starting scoring for client:{}", this.getClass().getSimpleName(), scoringDataDTO.getAccount());
+        return ResponseEntity.status(HttpStatus.OK).body(scoringServiceImpl.calculateScoring(scoringDataDTO));
     }
 }

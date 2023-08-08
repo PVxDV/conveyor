@@ -28,13 +28,19 @@ public class ScoringServiceImpl implements ScoringService{
     private final RateCalculator rateCalculator;
     private final Mapper mapper;
 
-    public CreditDTO calculateScoring(ScoringDataDTO scoringDataDTO, Long clientId) {
-        log.info("Starting calculateScoring() for clientId:{}", clientId);
+    public CreditDTO calculateScoring(ScoringDataDTO scoringDataDTO) {
+        log.info("Starting calculateScoring() for clientId:{}", scoringDataDTO.getAccount());
 
         ScoringDTO scoringDTO = mapper.scoringDataDTOToScoringDTO(scoringDataDTO);
         ScoringClientDTO clientDTO = mapper.scoringDataDTOToScoringClientDTO(scoringDataDTO);
 
         BigDecimal finalLoanRate = rateCalculator.calculateRateForScoring(clientDTO);
+
+        if(finalLoanRate.compareTo(new BigDecimal("-1")) == 0) {
+            log.info("verification failed - REJECTION");
+            return null;
+        }
+
         BigDecimal monthlyPayment = monthlyPaymentCalculator.calculateMonthlyPaymentForScoring(scoringDTO, finalLoanRate);
         BigDecimal psk = pskCalculator.calculatePsk(monthlyPayment, scoringDTO.getAmount(), scoringDataDTO.getTerm());
 

@@ -24,16 +24,19 @@ public class RateCalculatorImpl implements RateCalculator {
 
         log.info("age verification");
         if (age < 20 || age > 60) {
+            log.info("age verification failed - REJECTION");
             return rejection;
         }
 
         log.info("salary verification");
         if (scoringClientDTO.getAmount().compareTo(scoringClientDTO.getSalary().multiply(BigDecimal.valueOf(20))) > 0) {
+            log.info("salary verification failed - REJECTION");
             return rejection;
         }
 
         log.info("workExperience verification");
         if (scoringClientDTO.getWorkExperienceTotal() < 12 || scoringClientDTO.getWorkExperienceCurrent() < 3) {
+            log.info("workExperience verification failed - REJECTION");
             return rejection;
         }
 
@@ -45,6 +48,7 @@ public class RateCalculatorImpl implements RateCalculator {
         log.info("EmploymentStatus verification");
         switch (scoringClientDTO.getEmploymentStatus()) {
             case UNEMPLOYED -> {
+                log.info("EmploymentStatus verification failed - REJECTION");
                 return rejection;
             }
             case SELF_EMPLOYED -> currentRate = currentRate.add(BigDecimal.valueOf(1));
