@@ -10,18 +10,17 @@ import pvxdv.conveyor.calculators.MonthlyPaymentCalculator;
 import pvxdv.conveyor.calculators.PskCalculator;
 import pvxdv.conveyor.calculators.RateCalculator;
 import pvxdv.conveyor.dto.*;
-import pvxdv.conveyor.dto.enums.EmploymentStatus;
-import pvxdv.conveyor.dto.enums.Gender;
-import pvxdv.conveyor.dto.enums.MaritalStatus;
-import pvxdv.conveyor.dto.enums.Position;
 import pvxdv.conveyor.mapper.Mapper;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static pvxdv.conveyor.dto.enums.EmploymentStatus.SELF_EMPLOYED;
+import static pvxdv.conveyor.dto.enums.Gender.MALE;
+import static pvxdv.conveyor.dto.enums.MaritalStatus.SINGLE;
+import static pvxdv.conveyor.dto.enums.Position.MIDDLE_MANAGER;
 
 @ExtendWith(MockitoExtension.class)
 class ScoringServiceImplTest {
@@ -43,17 +42,17 @@ class ScoringServiceImplTest {
     @BeforeEach
     void setUp() {
         scoringDataDTO = new ScoringDataDTO(new BigDecimal("300000"), 18, "firstName", "lastName",
-                "middleName", Gender.MALE, LocalDate.of(1993, 3, 18), "1234",
+                "middleName", MALE, LocalDate.of(1993, 3, 18), "1234",
                 "123456", LocalDate.of(2007, 3, 10), "12345678",
-                MaritalStatus.SINGLE, 0, new EmploymentDTO(EmploymentStatus.SELF_EMPLOYED, "12345",
-                new BigDecimal("100000"), Position.MIDDLE_MANAGER, 84, 48),
+                SINGLE, 0, new EmploymentDTO(SELF_EMPLOYED, "12345",
+                new BigDecimal("100000"), MIDDLE_MANAGER, 84, 48),
                 "testAccount", true, true);
 
         scoringDTO = new ScoringDTO(new BigDecimal("300000"), 18, true);
 
-        scoringClientDTO = new ScoringClientDTO(new BigDecimal("300000"), Gender.MALE, LocalDate.of(1993, 3, 18),
-                MaritalStatus.SINGLE, 0, EmploymentStatus.SELF_EMPLOYED, new BigDecimal("100000"),
-                Position.MIDDLE_MANAGER, 84, 48, true, true);
+        scoringClientDTO = new ScoringClientDTO(new BigDecimal("300000"), MALE, LocalDate.of(1993, 3, 18),
+                SINGLE, 0, SELF_EMPLOYED, new BigDecimal("100000"),
+                MIDDLE_MANAGER, 84, 48, true, true);
     }
 
     @Test
