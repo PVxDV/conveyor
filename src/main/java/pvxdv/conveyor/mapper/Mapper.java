@@ -4,16 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import pvxdv.conveyor.dto.LoanApplicationRequestDTO;
 import pvxdv.conveyor.dto.ScoringDataDTO;
-import pvxdv.conveyor.dto.PreScoringRequestDTO;
+import pvxdv.conveyor.dto.PreScoringDTO;
 import pvxdv.conveyor.dto.ScoringClientDTO;
-import pvxdv.conveyor.dto.ScoringRequestDTO;
+import pvxdv.conveyor.dto.ScoringDTO;
 
 @Component
 @Slf4j
 public class Mapper {
-    public PreScoringRequestDTO loanApplicationRequestDTOToPreScoringRequestDTO(LoanApplicationRequestDTO loanApplicationRequestDTO) {
+    public PreScoringDTO loanApplicationRequestDTOToPreScoringDTO(LoanApplicationRequestDTO loanApplicationRequestDTO) {
         log.info("{} making localDTO with loanApplicationRequestDTOToPreScoringRequestDTO() method", this.getClass().getSimpleName());
-        return new PreScoringRequestDTO(loanApplicationRequestDTO.getAmount(), loanApplicationRequestDTO.getTerm());
+        return new PreScoringDTO(loanApplicationRequestDTO.getAmount(), loanApplicationRequestDTO.getTerm());
     }
 
     public ScoringClientDTO scoringDataDTOToScoringClientDTO(ScoringDataDTO scoringDataDTO) {
@@ -25,10 +25,10 @@ public class Mapper {
                 scoringDataDTO.getIsInsuranceEnabled(), scoringDataDTO.getIsSalaryClient());
     }
 
-    public ScoringRequestDTO scoringDataDTOToScoringRequestDTO(ScoringDataDTO scoringDataDTO) {
+    public ScoringDTO scoringDataDTOToScoringDTO(ScoringDataDTO scoringDataDTO) {
         log.info("{} making localDTO with scoringDataDTOToScoringRequestDTO method", this.getClass().getSimpleName());
-        return new ScoringRequestDTO(scoringDataDTO.getAmount(), scoringDataDTO.getTerm(),
-                scoringDataDTO.getIsInsuranceEnabled(), scoringDataDTO.getIsSalaryClient());
+        return new ScoringDTO(scoringDataDTO.getAmount(), scoringDataDTO.getTerm(),
+                scoringDataDTO.getIsInsuranceEnabled());
     }
 
 }

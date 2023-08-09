@@ -11,16 +11,15 @@ import java.math.RoundingMode;
 public class PskCalculatorImpl implements PskCalculator {
     @Override
     public BigDecimal calculatePsk(BigDecimal monthlyPayment, BigDecimal amount, Integer term) {
-        BigDecimal termInYears = BigDecimal.valueOf(term).divide(BigDecimal.valueOf(12), 2, RoundingMode.CEILING);
+        BigDecimal termInYears = new BigDecimal(term).divide(new BigDecimal("12"), 10, RoundingMode.CEILING);
 
         log.info("calculation of the psk");
 
-        BigDecimal psk = monthlyPayment.multiply(BigDecimal.valueOf(term)).
-                divide(amount, 10, RoundingMode.CEILING).
-                subtract(BigDecimal.valueOf(1)).
-                divide(termInYears, 10, RoundingMode.CEILING).
-                multiply(BigDecimal.valueOf(100));
+        BigDecimal totalAmount = monthlyPayment.multiply(new BigDecimal(term));
+        BigDecimal psk = totalAmount.divide(amount, 10, RoundingMode.CEILING)
+                .subtract(new BigDecimal("1")).divide(termInYears, 10, RoundingMode.CEILING)
+                .multiply(new BigDecimal("100"));
 
-        return psk;
+        return psk.multiply(termInYears).setScale(2,RoundingMode.CEILING);
     }
 }
