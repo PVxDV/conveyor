@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class ScoringServiceImpl implements ScoringService{
+public class ScoringServiceImpl implements ScoringService {
     private final MonthlyPaymentCalculator monthlyPaymentCalculator;
     private final PskCalculator pskCalculator;
     private final RateCalculator rateCalculator;
@@ -36,7 +36,7 @@ public class ScoringServiceImpl implements ScoringService{
 
         BigDecimal finalLoanRate = rateCalculator.calculateRateForScoring(clientDTO);
 
-        if(finalLoanRate.compareTo(new BigDecimal("-1")) == 0) {
+        if (finalLoanRate.compareTo(new BigDecimal("-1")) == 0) {
             log.info("verification failed - REJECTION");
             return null;
         }
@@ -53,21 +53,35 @@ public class ScoringServiceImpl implements ScoringService{
 
     private List<PaymentScheduleElement> generatePaymentScheduleList(Integer temp, BigDecimal monthlyPayment,
                                                                      BigDecimal amount, BigDecimal rate) {
-        BigDecimal rateCalculated = rate.divide(BigDecimal.valueOf(100), 2, RoundingMode.CEILING);
+        BigDecimal rateForCalculate = rate.divide(new BigDecimal("100"), 10, RoundingMode.CEILING);
         BigDecimal remainingDebt = amount;
         LocalDate date = LocalDate.now();
+
 
         List<PaymentScheduleElement> result = new ArrayList<>();
 
         for (int i = 1; i < temp + 1; i++) {
             LocalDate paymentDate = date.plusMonths(i);
 
-            BigDecimal interestPay = remainingDebt.multiply(rateCalculated).multiply(BigDecimal.valueOf(paymentDate.lengthOfMonth()).
-                    divide(BigDecimal.valueOf(paymentDate.lengthOfYear()), 2, RoundingMode.CEILING));
+            BigDecimal dayInMonth = new BigDecimal(paymentDate.lengthOfMonth());
+            BigDecimal dayInYear = new BigDecimal(paymentDate.lengthOfYear());
+            BigDecimal valueOfDaysToYears = dayInMonth.divide(dayInYear, 10, RoundingMode.CEILING);
 
+            BigDecimal interestPay = remainingDebt.multiply(rateForCalculate).multiply(valueOfDaysToYears);
             BigDecimal debtPay = monthlyPayment.subtract(interestPay);
 
             remainingDebt = remainingDebt.subtract(debtPay);
+
+            if (i == temp && remainingDebt.doubleValue() != 0) {
+                    monthlyPayment = monthlyPayment.add(remainingDebt);
+                    debtPay = debtPay.add(remainingDebt);
+
+                log.info("generatePaymentScheduleList record:{}", i);
+                result.add(new PaymentScheduleElement(i, paymentDate, monthlyPayment.setScale(2, RoundingMode.CEILING),
+                        interestPay.setScale(2, RoundingMode.CEILING), debtPay.setScale(2, RoundingMode.CEILING),
+                        new BigDecimal("0")));
+                break;
+            }
 
             log.info("generatePaymentScheduleList record:{}", i);
             result.add(new PaymentScheduleElement(i, paymentDate, monthlyPayment.setScale(2, RoundingMode.CEILING),

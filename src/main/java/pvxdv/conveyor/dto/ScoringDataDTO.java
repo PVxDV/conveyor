@@ -3,7 +3,6 @@ package pvxdv.conveyor.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Positive;
 import lombok.Value;
 import org.hibernate.validator.constraints.Length;
 import pvxdv.conveyor.dto.enums.Gender;
@@ -39,7 +38,7 @@ public class ScoringDataDTO {
     String passportIssueBranch;
     @NotNull
     MaritalStatus maritalStatus;
-    @NotNull @Positive
+    @NotNull @Min(0)
     Integer dependentAmount;
     @NotNull
     EmploymentDTO employment;
