@@ -1,28 +1,24 @@
 package pvxdv.conveyor.calculators;
 
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
-import pvxdv.conveyor.dto.ScoringClientDTO;
-import pvxdv.conveyor.dto.enums.EmploymentStatus;
-import pvxdv.conveyor.dto.enums.Gender;
-import pvxdv.conveyor.dto.enums.MaritalStatus;
-import pvxdv.conveyor.dto.enums.Position;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class PskCalculatorImplTest {
-    ScoringClientDTO scoringClientDTO;
-    @BeforeEach
-    void setUp() {
-        scoringClientDTO = new ScoringClientDTO(new BigDecimal("300000"), Gender.MALE, LocalDate.of(1993, 3, 18),
-                MaritalStatus.SINGLE, 0, EmploymentStatus.SELF_EMPLOYED, new BigDecimal("100000"),
-                Position.MIDDLE_MANAGER, 84, 48, true, true);
-    }
+    @InjectMocks
+    PskCalculatorImpl pskCalculator;
 
     @Test
     void calculatePsk() {
+        BigDecimal psk = pskCalculator.calculatePsk(new BigDecimal("47144.93"), new BigDecimal("1000000"), 24);
+        assertEquals(new BigDecimal("13.15"), psk);
     }
 }
