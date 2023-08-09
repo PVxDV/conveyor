@@ -68,6 +68,7 @@ class PreScoringControllerTest {
 
     }
 
+    //todo PreScoringControllerTest
 //    @Test
 //    void getOffers() throws Exception {
 //        when(preScoringServiceImpl.generateAvailableOffers(any(), any())).thenReturn(loanOfferDTOList);
