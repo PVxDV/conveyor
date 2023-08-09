@@ -51,7 +51,7 @@ public class PreScoringServiceImpl implements PreScoringService {
 
         BigDecimal finalLoanRate = rateCalculator.calculateRateForPreScoring(isInsuranceEnabled, isSalaryClient);
         BigDecimal monthlyPayment = monthlyPaymentCalculator.calculateMonthlyPaymentForPreScoring(preScoringDTO,
-                isInsuranceEnabled, isSalaryClient, finalLoanRate);
+                isInsuranceEnabled, finalLoanRate);
 
         BigDecimal totalAmount = monthlyPayment.multiply(BigDecimal.valueOf(term));
 

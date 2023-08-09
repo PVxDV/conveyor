@@ -53,14 +53,14 @@ class PreScoringServiceImplTest {
         when(mapper.loanApplicationRequestDTOToPreScoringDTO(any())).thenReturn(preScoringDTO);
         when(rateCalculator.calculateRateForPreScoring(any(), any())).thenReturn(new BigDecimal("20"));
         when(monthlyPaymentCalculator
-                .calculateMonthlyPaymentForPreScoring(any(), any(), any(), any()))
+                .calculateMonthlyPaymentForPreScoring(any(), any(), any()))
                 .thenReturn(new BigDecimal("15000"));
 
         List<LoanOfferDTO> loanOfferDTOList = preScoringService.generateAvailableOffers(loanApplicationRequestDTO, applicationId);
 
         verify(mapper, times(1)).loanApplicationRequestDTOToPreScoringDTO(any());
         verify(rateCalculator, times(4)).calculateRateForPreScoring(any(), any());
-        verify(monthlyPaymentCalculator, times(4)).calculateMonthlyPaymentForPreScoring(any(), any(), any(), any());
+        verify(monthlyPaymentCalculator, times(4)).calculateMonthlyPaymentForPreScoring(any(), any(), any());
 
         assertEquals(4, loanOfferDTOList.size());
 
@@ -92,7 +92,7 @@ class PreScoringServiceImplTest {
 
         verify(mapper, times(0)).loanApplicationRequestDTOToPreScoringDTO(any());
         verify(rateCalculator, times(0)).calculateRateForPreScoring(any(), any());
-        verify(monthlyPaymentCalculator, times(0)).calculateMonthlyPaymentForPreScoring(any(), any(), any(), any());
+        verify(monthlyPaymentCalculator, times(0)).calculateMonthlyPaymentForPreScoring(any(), any(), any());
 
        assertNull(loanOfferDTOList);
     }

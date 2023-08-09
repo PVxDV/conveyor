@@ -26,7 +26,7 @@ public class MonthlyPaymentCalculatorImpl implements MonthlyPaymentCalculator {
         BigDecimal amount = scoringDTO.getAmount();
 
         if (scoringDTO.getIsInsuranceEnabled()) {
-            return calculateMonthlyPayment(calculateInsurance(insuranceCost), calculateAnnuityRatio(term, rate), amount);
+            return calculateMonthlyPayment(calculateInsurance(scoringDTO.getAmount()), calculateAnnuityRatio(term, rate), amount);
         } else {
             return calculateMonthlyPayment(calculateAnnuityRatio(term, rate), amount);
         }
@@ -34,13 +34,13 @@ public class MonthlyPaymentCalculatorImpl implements MonthlyPaymentCalculator {
 
     @Override
     public BigDecimal calculateMonthlyPaymentForPreScoring(PreScoringDTO preScoringDTO, Boolean isInsuranceEnabled,
-                                                           Boolean isSalaryClient, BigDecimal rate) {
+                                                            BigDecimal rate) {
         log.info("calculateMonthlyPaymentForPreScoring()");
         Integer term = preScoringDTO.getTerm();
         BigDecimal amount = preScoringDTO.getAmount();
 
         if (isInsuranceEnabled) {
-            return calculateMonthlyPayment(calculateInsurance(insuranceCost), calculateAnnuityRatio(term, rate), amount);
+            return calculateMonthlyPayment(calculateInsurance(preScoringDTO.getAmount()), calculateAnnuityRatio(term, rate), amount);
         } else {
             return calculateMonthlyPayment(calculateAnnuityRatio(term, rate), amount);
         }
@@ -75,7 +75,7 @@ public class MonthlyPaymentCalculatorImpl implements MonthlyPaymentCalculator {
         return amount.multiply(annuityRatio).setScale(2, RoundingMode.CEILING);
     }
 
-    public BigDecimal calculateInsurance(BigDecimal amount) {
+    private BigDecimal calculateInsurance(BigDecimal amount) {
         log.info("calculateInsurance()");
 
         if (amount.doubleValue() > 50000) {

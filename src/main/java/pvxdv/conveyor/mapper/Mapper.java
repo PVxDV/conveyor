@@ -28,7 +28,7 @@ public class Mapper {
     public ScoringDTO scoringDataDTOToScoringDTO(ScoringDataDTO scoringDataDTO) {
         log.info("{} making localDTO with scoringDataDTOToScoringRequestDTO method", this.getClass().getSimpleName());
         return new ScoringDTO(scoringDataDTO.getAmount(), scoringDataDTO.getTerm(),
-                scoringDataDTO.getIsInsuranceEnabled(), scoringDataDTO.getIsSalaryClient());
+                scoringDataDTO.getIsInsuranceEnabled());
     }
 
 }

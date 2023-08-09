@@ -48,7 +48,7 @@ public class ScoringServiceImpl implements ScoringService{
                 monthlyPayment, scoringDTO.getAmount(), finalLoanRate);
 
         return new CreditDTO(scoringDTO.getAmount(), scoringDTO.getTerm(), monthlyPayment, finalLoanRate,
-                psk, scoringDTO.getIsInsuranceEnabled(), scoringDTO.getIsSalaryClient(), paymentScheduleElementList);
+                psk, scoringDTO.getIsInsuranceEnabled(), clientDTO.getIsSalaryClient(), paymentScheduleElementList);
     }
 
     private List<PaymentScheduleElement> generatePaymentScheduleList(Integer temp, BigDecimal monthlyPayment,
@@ -70,7 +70,9 @@ public class ScoringServiceImpl implements ScoringService{
             remainingDebt = remainingDebt.subtract(debtPay);
 
             log.info("generatePaymentScheduleList record:{}", i);
-            result.add(new PaymentScheduleElement(i, paymentDate, monthlyPayment, interestPay, debtPay, remainingDebt));
+            result.add(new PaymentScheduleElement(i, paymentDate, monthlyPayment.setScale(2, RoundingMode.CEILING),
+                    interestPay.setScale(2, RoundingMode.CEILING), debtPay.setScale(2, RoundingMode.CEILING),
+                    remainingDebt.setScale(2, RoundingMode.CEILING)));
         }
         log.info("generatePaymentScheduleList");
         return result;

@@ -49,7 +49,7 @@ class ScoringServiceImplTest {
                 new BigDecimal("100000"), Position.MIDDLE_MANAGER, 84, 48),
                 "testAccount", true, true);
 
-        scoringDTO = new ScoringDTO(new BigDecimal("300000"), 18, true, true);
+        scoringDTO = new ScoringDTO(new BigDecimal("300000"), 18, true);
 
         scoringClientDTO = new ScoringClientDTO(new BigDecimal("300000"), Gender.MALE, LocalDate.of(1993, 3, 18),
                 MaritalStatus.SINGLE, 0, EmploymentStatus.SELF_EMPLOYED, new BigDecimal("100000"),

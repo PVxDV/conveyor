@@ -9,5 +9,4 @@ public class ScoringDTO {
     BigDecimal amount;
     Integer term;
     Boolean isInsuranceEnabled;
-    Boolean isSalaryClient;
 }

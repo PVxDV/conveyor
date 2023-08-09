@@ -11,7 +11,7 @@ public interface MonthlyPaymentCalculator {
     BigDecimal calculateMonthlyPaymentForScoring(ScoringDTO scoringDTO, BigDecimal rate);
 
     BigDecimal calculateMonthlyPaymentForPreScoring(PreScoringDTO preSoringResponseDTO, Boolean isInsuranceEnabled,
-                                                    Boolean isSalaryClient, BigDecimal rate);
+                                                    BigDecimal rate);
 
 
 }
