@@ -3,7 +3,6 @@ package pvxdv.conveyor.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,11 +14,13 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import pvxdv.conveyor.dto.*;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,8 +32,8 @@ class PreScoringControllerTest {
     List<LoanOfferDTO> loanOfferDTOList;
     LoanApplicationRequestDTO loanApplicationRequestDTO;
 
-    @BeforeEach
-    void setUp() {
+    @Test
+    void getOffersApproved() throws Exception {
         loanOfferDTOList = new ArrayList<>();
         loanOfferDTOList.add(new LoanOfferDTO(1L, new BigDecimal("300000"), new BigDecimal("344551.32"),
                 18, new BigDecimal("19141.74"), new BigDecimal("18"), false, false));
@@ -46,16 +47,27 @@ class PreScoringControllerTest {
         loanApplicationRequestDTO = new LoanApplicationRequestDTO(new BigDecimal("300000"), 18, "Pavel", "Ryzhikh",
                 "Dmitrievich", "testEmail@test", LocalDate.of(1993, 3, 18),
                 "1234", "123456");
-    }
-    @Test
-    void getOffers() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(putJson("/conveyor/offers/1", loanApplicationRequestDTO))
+
+        MvcResult mvcResult = mockMvc.perform(convertToPostWithJson("/conveyor/offers/1", loanApplicationRequestDTO))
                 .andExpect(status().is2xxSuccessful()).andReturn();
 
         assertEquals(convertToJson(loanOfferDTOList), mvcResult.getResponse().getContentAsString());
     }
+    @Test
+    void getOffersRejection() throws Exception {
+        LocalDate minorBirthday = LocalDate.now().minusYears(16);
 
-    public static MockHttpServletRequestBuilder putJson(String uri, Object body) {
+        loanApplicationRequestDTO = new LoanApplicationRequestDTO(new BigDecimal("300000"), 18, "Pavel", "Ryzhikh",
+                "Dmitrievich", "testEmail@test", minorBirthday,
+                "1234", "123456");
+
+        MvcResult mvcResult = mockMvc.perform(convertToPostWithJson("/conveyor/offers/1", loanApplicationRequestDTO))
+                .andExpect(status().is2xxSuccessful()).andReturn();
+
+        assertNull(null, mvcResult.getResponse().getContentAsString());
+    }
+
+    public static MockHttpServletRequestBuilder convertToPostWithJson(String uri, Object body) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
@@ -73,6 +85,8 @@ class PreScoringControllerTest {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
