@@ -53,22 +53,21 @@ public class ScoringServiceImpl implements ScoringService {
 
     private List<PaymentScheduleElement> generatePaymentScheduleList(Integer temp, BigDecimal monthlyPayment,
                                                                      BigDecimal amount, BigDecimal rate) {
-        BigDecimal rateForCalculate = rate.divide(new BigDecimal("100"), 10, RoundingMode.CEILING);
+        BigDecimal rateForCalculate = rate.divide(new BigDecimal("100"), 4, RoundingMode.CEILING);
         BigDecimal remainingDebt = amount;
         LocalDate date = LocalDate.now();
-
 
         List<PaymentScheduleElement> result = new ArrayList<>();
 
         for (int i = 1; i < temp + 1; i++) {
+            LocalDate previousDate = date.plusMonths(i-1);
             LocalDate paymentDate = date.plusMonths(i);
 
-            BigDecimal dayInMonth = new BigDecimal(paymentDate.lengthOfMonth());
-            BigDecimal dayInYear = new BigDecimal(paymentDate.lengthOfYear());
-            BigDecimal valueOfDaysToYears = dayInMonth.divide(dayInYear, 10, RoundingMode.CEILING);
+            BigDecimal dayRate = rateForCalculate.divide(new BigDecimal(previousDate.lengthOfYear()), 100, RoundingMode.CEILING);
+            BigDecimal dayInMonth = new BigDecimal(previousDate.lengthOfMonth());
 
-            BigDecimal interestPay = remainingDebt.multiply(rateForCalculate).multiply(valueOfDaysToYears);
-            BigDecimal debtPay = monthlyPayment.subtract(interestPay);
+            BigDecimal interestPay = remainingDebt.multiply(dayRate).multiply(dayInMonth).setScale(2, RoundingMode.CEILING);
+            BigDecimal debtPay = monthlyPayment.subtract(interestPay).setScale(2, RoundingMode.CEILING);
 
             remainingDebt = remainingDebt.subtract(debtPay);
 
