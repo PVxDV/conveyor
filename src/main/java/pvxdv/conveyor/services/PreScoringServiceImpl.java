@@ -33,11 +33,12 @@ public class PreScoringServiceImpl implements PreScoringService {
         log.info("Starting generateAvailableOffers() for applicationId:{}", applicationId);
         PreScoringDTO preScoringDTO = mapper.loanApplicationRequestDTOToPreScoringDTO(loanApplicationRequestDTO);
 
-        List<LoanOfferDTO> result = new ArrayList<>();
-        result.add(generateOffer(preScoringDTO, true, true, applicationId));
-        result.add(generateOffer(preScoringDTO, true, false, applicationId));
-        result.add(generateOffer(preScoringDTO, false, true, applicationId));
-        result.add(generateOffer(preScoringDTO, false, false, applicationId));
+        List<LoanOfferDTO> result = new ArrayList<>(List.of(
+                generateOffer(preScoringDTO, true, true, applicationId),
+                generateOffer(preScoringDTO, true, false, applicationId),
+                generateOffer(preScoringDTO, false, true, applicationId),
+                generateOffer(preScoringDTO, false, false, applicationId)));
+
         result.sort(Comparator.comparing(LoanOfferDTO::getRate).reversed());
 
         log.info("Available offers for applicationId:{} are generated", applicationId);

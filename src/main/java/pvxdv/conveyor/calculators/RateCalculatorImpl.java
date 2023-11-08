@@ -9,51 +9,50 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 
-
 @Component
 @Slf4j
 public class RateCalculatorImpl implements RateCalculator {
     @Value("${baseRate}")
     private BigDecimal baseRate;
-    private final BigDecimal rejection = new BigDecimal("-1");
+    private final BigDecimal REJECTION = new BigDecimal("-1");
 
     @Override
     public BigDecimal calculateRateForScoring(ScoringClientDTO scoringClientDTO) {
         log.info("Client verification begins");
-        BigDecimal currentRate = insuranceAndClientChecker(baseRate, scoringClientDTO.getIsInsuranceEnabled(), scoringClientDTO.getIsSalaryClient());
+        BigDecimal currentRate = insuranceAndClientChecker(scoringClientDTO.getIsInsuranceEnabled(), scoringClientDTO.getIsSalaryClient());
         int age = ageCalculator(scoringClientDTO.getBirthdate());
 
         log.info("age verification");
         if (age < 20 || age > 60) {
             log.info("age verification failed - REJECTION");
-            return rejection;
+            return REJECTION;
         }
 
         log.info("salary verification");
         if (scoringClientDTO.getAmount().compareTo(scoringClientDTO.getSalary().multiply(new BigDecimal("20"))) > 0) {
             log.info("salary verification failed - REJECTION");
-            return rejection;
+            return REJECTION;
         }
 
         log.info("workExperience verification");
         if (scoringClientDTO.getWorkExperienceTotal() < 12 || scoringClientDTO.getWorkExperienceCurrent() < 3) {
             log.info("workExperience verification failed - REJECTION");
-            return rejection;
-        }
-
-        log.info("dependentAmount verification");
-        if (scoringClientDTO.getDependentAmount() > 1) {
-            currentRate = currentRate.add(new BigDecimal("2"));
+            return REJECTION;
         }
 
         log.info("EmploymentStatus verification");
         switch (scoringClientDTO.getEmploymentStatus()) {
             case UNEMPLOYED -> {
                 log.info("EmploymentStatus verification failed - REJECTION");
-                return rejection;
+                return REJECTION;
             }
             case SELF_EMPLOYED -> currentRate = currentRate.add(new BigDecimal("1"));
             case BUSINESS_OWNER -> currentRate = currentRate.add(new BigDecimal("3"));
+        }
+
+        log.info("dependentAmount verification");
+        if (scoringClientDTO.getDependentAmount() > 1) {
+            currentRate = currentRate.add(new BigDecimal("2"));
         }
 
         log.info("EmploymentPosition verification");
@@ -88,22 +87,22 @@ public class RateCalculatorImpl implements RateCalculator {
     }
 
     @Override
-    public BigDecimal calculateRateForPreScoring( Boolean isInsuranceEnabled, Boolean isSalaryClient) {
-        return insuranceAndClientChecker(baseRate, isInsuranceEnabled, isSalaryClient);
+    public BigDecimal calculateRateForPreScoring(Boolean isInsuranceEnabled, Boolean isSalaryClient) {
+        return insuranceAndClientChecker(isInsuranceEnabled, isSalaryClient);
     }
 
-    private BigDecimal insuranceAndClientChecker(BigDecimal rate, Boolean isInsuranceEnabled, Boolean isSalaryClient) {
-        BigDecimal creditRate = rate;
+    private BigDecimal insuranceAndClientChecker(Boolean isInsuranceEnabled, Boolean isSalaryClient) {
+        BigDecimal creditRate = baseRate;
 
         if (isInsuranceEnabled) {
             if (isSalaryClient) {
-                creditRate = creditRate.subtract(new BigDecimal("4"));
+                creditRate = baseRate.subtract(new BigDecimal("4"));
             } else {
-                creditRate = creditRate.subtract(new BigDecimal("3"));
+                creditRate = baseRate.subtract(new BigDecimal("3"));
             }
         } else {
             if (!isSalaryClient) {
-                creditRate = creditRate.add(new BigDecimal("3"));
+                creditRate = baseRate.add(new BigDecimal("3"));
             }
         }
         return creditRate;
@@ -113,4 +112,6 @@ public class RateCalculatorImpl implements RateCalculator {
         LocalDate currentDate = LocalDate.now();
         return Period.between(birthDate, currentDate).getYears();
     }
+
+
 }
